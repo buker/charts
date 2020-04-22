@@ -13,9 +13,21 @@ image:
 web:
   hpa:
     enabled: false
-    cputhreshold: 60
-    minpods: 1
-    maxpods: 10
+    minReplicas: 1
+    maxReplicas: 2
+    metrics:
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
   replicacount: 1
   resources: {}
     # limits:
@@ -75,9 +87,21 @@ cron:
 worker:
   hpa:
     enabled: false
-    cputhreshold: 60
-    minpods: 1
-    maxpods: 10
+    minReplicas: 1
+    maxReplicas: 2
+    metrics:
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
   replicacount: 2
   resources: {}
     # limits:
@@ -102,6 +126,9 @@ user:
   create: true
   email: admin@sentry.local
   # password: admin-password
+  ## The fallowing variables are oly used when internal PG is disabled and sealedSecret is enabled
+  # sealedSecret:
+  #   password: <sealedSecretHash>
 
 # BYO Email server
 # TODO: Add exim4 template
@@ -117,6 +144,9 @@ email:
   # When defined the `password` field is ignored
   # existingSecret: secret-name
   # existingSecretKey: smtp-password
+  ## The fallowing variables are oly used when internal PG is disabled and sealedSecret is enabled
+  # sealedSecret:
+  #   password: <sealedSecretHash>
 
 # Name of the service and what port to expose on the pod
 # Don't change these unless you know what you're doing
@@ -189,6 +219,11 @@ filestore:
   #  signature_version:
   #  region_name:
   #  default_acl:
+  ## The fallowing variables are oly used when internal PG is disabled and sealedSecret is enabled
+  #  sealedSecret:
+  #     password: <sealedSecretHash>
+  #     accessKey: <sealedSecretHash>
+  #     secretKey: <sealedSecretHash>
 
 ## Configure ingress resource that allow you to access the
 ## Sentry installation. Set up the URL
@@ -231,6 +266,9 @@ postgresql:
   # When defined the `postgresqlPassword` field is ignored
   # existingSecret: secret-name
   # existingSecretKey: postgresql-password
+  # The fallowing variables are oly used when internal PG is disabled and sealedSecret is enabled
+  # sealedSecret:
+  #   postgresqlPassword: <sealedSecretHash>
 
 redis:
   enabled: true
@@ -243,6 +281,9 @@ redis:
   # When defined the `password` field is ignored
   # existingSecret: secret-name
   # existingSecretKey: redis-password
+  # The fallowing variables are oly used when internal PG is disabled and sealedSecret is enabled
+  # sealedSecret:
+  #   password: <sealedSecretHash>
   master:
     persistence:
       enabled: true
@@ -332,3 +373,5 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name:
   annotations: {}
+sealedSecret:
+  enabled: false

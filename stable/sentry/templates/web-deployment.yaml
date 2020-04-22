@@ -81,7 +81,7 @@ spec:
           value: {{ template "sentry.postgresql.host" . }}
         - name: SENTRY_POSTGRES_PORT
           value: {{ template "sentry.postgresql.port" . }}
-        {{- if or (.Values.redis.enabled) (.Values.redis.password) (.Values.redis.existingSecret)  }}
+        {{- if or (.Values.redis.enabled) (.Values.redis.password) (.Values.redis.existingSecret) (.Values.sealedSecret.enabled) }}
         - name: SENTRY_REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -107,6 +107,7 @@ spec:
             secretKeyRef:
             {{- if .Values.email.existingSecret }}
               name: {{ .Values.email.existingSecret }}
+            {{- else if .Values.sealedSecret.enabled }}
             {{- else }}
               name: {{ template "sentry.fullname" . }}
             {{- end }}

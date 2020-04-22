@@ -1,5 +1,5 @@
 {{- if .Values.worker.hpa.enabled -}}
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "sentry.fullname" . }}-worker
@@ -15,5 +15,6 @@ spec:
     name: {{ template "sentry.fullname" . }}-worker
   minReplicas: {{ .Values.worker.hpa.minpods }}
   maxReplicas: {{ .Values.worker.hpa.maxpods }}
-  targetCPUUtilizationPercentage: {{ .Values.worker.hpa.cputhreshold }}
+  metrics:
+    {{ toYaml .Values.worker.hpa.metrics | nindent 4 }}
 {{- end }}

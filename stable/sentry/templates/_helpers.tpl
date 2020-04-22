@@ -72,7 +72,11 @@ Set postgres secret
 */}}
 {{- define "sentry.postgresql.secret" -}}
 {{- if .Values.postgresql.enabled -}}
+{{- if .Values.sealedSecret.enabled -}}
+{{- template "sentry.fullname" . -}}
+{{- else -}}
 {{- template "sentry.postgresql.fullname" . -}}
+{{- end -}}
 {{- else -}}
 {{- template "sentry.fullname" . -}}
 {{- end -}}
